@@ -21,5 +21,8 @@
 <div class="mb-3 form-check">
     <input type="checkbox" class="form-check-input" id="inputPublished" value="1" name="published"
         {{ $article->published ?? '' ? 'checked' : '' }}>
+    @if(isset($article))
+        <input type="hidden" name="article">
+    @endif
     <label class="form-check-label" for="inputPublished">Published</label>
 </div>
