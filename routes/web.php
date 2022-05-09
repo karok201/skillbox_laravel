@@ -8,6 +8,8 @@ Route::get('/about', function () {
 
 Route::resource('articles', 'App\Http\Controllers\ArticlesController');
 
+Route::get('/articles/tags/{tag}', 'App\Http\Controllers\TagsController@index');
+
 // Contacts interface
 Route::get('/contacts', 'App\Http\Controllers\ContactsController@create');
 Route::get('/admin/feedback', 'App\Http\Controllers\ContactsController@index');

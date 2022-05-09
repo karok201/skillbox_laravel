@@ -9,6 +9,7 @@ class FormRequest
         $slugValidate = '';
         $request->has('article') ?? $slugValidate = '|unique:App\Models\Article,slug|';
 
+        $request->has('tags');
 
         $attributes = $request->validate([
             'slug' => 'required|regex:~^[a-z\d][a-z\d]*[_-]?[a-z\d]*[a-z\d ]$~i' . $slugValidate,
