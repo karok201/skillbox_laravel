@@ -9,6 +9,11 @@ use Illuminate\Validation\ValidationException;
 
 class ArticlesController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth')->except(['index', 'show']);
+    }
+
     public function index()
     {
         $articles = Article::latest()->get();
@@ -28,6 +33,8 @@ class ArticlesController extends Controller
 
     public function edit(Article $article)
     {
+        $this->authorize('update', $article);
+
         return view('articles.edit', ['article' => $article]);
     }
 
@@ -63,6 +70,8 @@ class ArticlesController extends Controller
     public function store(TagsSynchronizer $tagsSynchronizer)
     {
         $attributes = FormRequest::validate(request());
+
+        $attributes['owner_id'] = auth()->id();
 
         $article = Article::create($attributes);
 
