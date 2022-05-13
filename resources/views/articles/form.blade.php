@@ -18,6 +18,13 @@
     <input type="text" class="form-control" id="inputBody" placeholder="Введите описание" name="largeBody"
            value="{{ old('largeBody', $article->largeBody ?? '')  }}">
 </div>
+<div class="mb-3">
+    <label for="inputBody" class="form-label">Тэги для статьи</label>
+    <input type="text" class="form-control" id="inputBody" placeholder="Укажите тэги" name="tags"
+        @if(isset($article))
+            value="{{ $article->tags->pluck('name')->implode(',') }}"
+        @endif>
+</div>
 <div class="mb-3 form-check">
     <input type="checkbox" class="form-check-input" id="inputPublished" value="1" name="published"
         {{ $article->published ?? '' ? 'checked' : '' }}>
