@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Helpers\FormRequest;
 use App\Models\Article;
+use App\Notifications\ArticleCreated;
+use App\Notifications\ArticleUpdated;
+use App\Notifications\ArticleDeleted;
 use App\Services\TagsSynchronizer;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Validation\ValidationException;
@@ -47,8 +50,7 @@ class ArticlesController extends Controller
         $attributes = FormRequest::validate(request());
 
         $article->update($attributes);
-
-        $article->owner->notify(new \App\Notifications\ArticleUpdated());
+        $article->owner->notify(new ArticleUpdated());
 
         if (empty(request('tags'))) {
             $article->tags()->delete();
@@ -57,7 +59,6 @@ class ArticlesController extends Controller
         }
 
         $tags = collect(explode(',', request('tags')))->keyBy(function ($item) { return $item; });
-
         $tagsSynchronizer->sync($tags, $article);
 
         return redirect('/articles/' . $attributes['slug']);
@@ -66,8 +67,7 @@ class ArticlesController extends Controller
     public function destroy(Article $article)
     {
         $article->delete();
-
-        $article->owner->notify(new \App\Notifications\ArticleDeleted());
+        $article->owner->notify(new ArticleDeleted());
 
         return redirect('/articles');
     }
@@ -78,12 +78,10 @@ class ArticlesController extends Controller
     public function store(TagsSynchronizer $tagsSynchronizer)
     {
         $attributes = FormRequest::validate(request());
-
         $attributes['owner_id'] = auth()->id();
 
         $article = Article::create($attributes);
-
-        $article->owner->notify(new \App\Notifications\ArticleCreated());
+        $article->owner->notify(new ArticleCreated());
 
         if (empty(request('tags'))) {
             $article->tags()->delete();
@@ -92,7 +90,6 @@ class ArticlesController extends Controller
         }
 
         $tags = collect(explode(',', request('tags')))->keyBy(function ($item) { return $item; });
-
         $tagsSynchronizer->sync($tags, $article);
 
         return redirect('/articles');

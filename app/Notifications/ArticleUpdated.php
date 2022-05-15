@@ -41,10 +41,10 @@ class ArticleUpdated extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-                    ->subject('Article Updated')
-                    ->line('You have updated an article')
-                    ->action('See it at main page', url('/articles'))
-                    ->line('Thank you for using our application!');
+            ->subject('Article Updated')
+            ->line('You have updated an article')
+            ->action('See it at main page', url('/articles'))
+            ->line('Thank you for using our application!');
     }
 
     /**

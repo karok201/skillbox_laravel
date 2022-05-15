@@ -41,10 +41,10 @@ class ArticleDeleted extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-                    ->subject('Article Deleted')
-                    ->line('You deleted an article.')
-                    ->action('Go to main page', url('/articles'))
-                    ->line('Thank you for using our application!');
+            ->subject('Article Deleted')
+            ->line('You deleted an article.')
+            ->action('Go to main page', url('/articles'))
+            ->line('Thank you for using our application!');
     }
 
     /**

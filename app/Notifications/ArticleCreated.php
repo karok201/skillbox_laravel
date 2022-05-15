@@ -41,10 +41,10 @@ class ArticleCreated extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-                    ->subject('Article Created')
-                    ->line('New article has been created')
-                    ->action('See it at main page!', url('/articles'))
-                    ->line('Thank you for using our application!');
+            ->subject('Article Created')
+            ->line('New article has been created')
+            ->action('See it at main page!', url('/articles'))
+            ->line('Thank you for using our application!');
     }
 
     /**

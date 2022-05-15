@@ -3,19 +3,20 @@
 namespace App\Listeners;
 
 use App\Events\ArticleCreated;
+use App\Mail\ArticleCreated as ArticleMail;
 
 class SendArticleCreatedNotification
 {
     /**
      * Handle the event.
      *
-     * @param  \App\Events\ArticleCreated  $event
+     * @param  ArticleCreated  $event
      * @return void
      */
     public function handle(ArticleCreated $event)
     {
         \Mail::to($event->article->owner->email)->send(
-            new \App\Mail\ArticleCreated($event->article)
+            new ArticleMail($event->article)
         );
     }
 }
