@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Helpers\FormRequest;
 use App\Models\Article;
 use App\Services\TagsSynchronizer;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Validation\ValidationException;
 
 class ArticlesController extends Controller
@@ -31,6 +32,9 @@ class ArticlesController extends Controller
         return view('articles.create');
     }
 
+    /**
+     * @throws AuthorizationException
+     */
     public function edit(Article $article)
     {
         $this->authorize('update', $article);
@@ -43,6 +47,8 @@ class ArticlesController extends Controller
         $attributes = FormRequest::validate(request());
 
         $article->update($attributes);
+
+        $article->owner->notify(new \App\Notifications\ArticleUpdated());
 
         if (empty(request('tags'))) {
             $article->tags()->delete();
@@ -61,6 +67,8 @@ class ArticlesController extends Controller
     {
         $article->delete();
 
+        $article->owner->notify(new \App\Notifications\ArticleDeleted());
+
         return redirect('/articles');
     }
 
@@ -74,6 +82,8 @@ class ArticlesController extends Controller
         $attributes['owner_id'] = auth()->id();
 
         $article = Article::create($attributes);
+
+        $article->owner->notify(new \App\Notifications\ArticleCreated());
 
         if (empty(request('tags'))) {
             $article->tags()->delete();
