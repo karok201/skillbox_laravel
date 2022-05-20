@@ -20,13 +20,17 @@ class ArticlesController extends Controller
 
     public function index()
     {
-        $articles = Article::latest()->get();
+        $articles = Article::latest()->get()->filter->published;
 
         return view('index', compact('articles'));
     }
 
     public function show(Article $article)
     {
+        if (!auth()->user()->isAdmin() && $article->owner_id != auth()->user()->id && !$article->published) {
+            abort(403);
+        }
+
         return view('articles.show', ['article' => $article]);
     }
 
