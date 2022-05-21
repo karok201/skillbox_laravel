@@ -3,18 +3,18 @@
 namespace App\Services;
 
 use App\Models\Tag;
-use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Model;
 
 class TagsSynchronizer
 {
-    public function sync(Collection $tags, Model $model)
+    public function sync(Model $model)
     {
         $articleTags = $model->tags->keyBy('name');
+        $requestTags = collect(explode(',', request('tags')));
 
-        $syncIds = $articleTags->intersectByKeys($tags)->pluck('id')->toArray();
+        $syncIds = $articleTags->intersectByKeys($requestTags)->pluck('id')->toArray();
 
-        $tagsToAttach = $tags->diffKeys($articleTags);
+        $tagsToAttach = $requestTags->diffKeys($articleTags);
 
         foreach ($tagsToAttach as $tag) {
             $tag = Tag::firstOrCreate(['name' => $tag]);
@@ -23,5 +23,9 @@ class TagsSynchronizer
         }
 
         $model->tags()->sync($syncIds);
+
+        if (empty(request('tags'))) {
+            $model->tags()->delete();
+        }
     }
 }

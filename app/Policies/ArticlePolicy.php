@@ -18,6 +18,11 @@ class ArticlePolicy
      * @return \Illuminate\Auth\Access\Response|bool
      */
 
+    public function view(User $user, Article $article)
+    {
+        return $user->isAdmin() || $user->id == $article->owner_id || $article->published;
+    }
+
     public function create()
     {
         return auth()->check();
