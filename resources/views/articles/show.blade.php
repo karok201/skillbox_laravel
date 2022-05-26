@@ -6,7 +6,9 @@
             {{ $article->title }} <a href="/articles/{{ $article->slug }}/edit">Изменить</a>
         </h3>
         @foreach($article->tags as $tag)
-            <a href="" class="btn btn-sm btn-success">{{ $tag->name }}</a>
+            <div class="col-1">
+                <a href="" class="btn btn-sm btn-success">{{ $tag->name }}</a>
+            </div>
         @endforeach
         <br>
         {{ $article->created_at->toFormattedDateString() }}
