@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Models\Tag;
 use App\Services\TagsSynchronizer;
+use Blade;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -28,7 +29,11 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         view()->composer('layout.sidebar', function ($view) {
-            $view->with('tagsCloud', \App\Models\Tag::tagsCloud());
+            $view->with('tagsCloud', Tag::tagsCloud());
+        });
+
+        Blade::if('admin', function ():bool {
+            return auth()->user()->isAdmin();
         });
     }
 }

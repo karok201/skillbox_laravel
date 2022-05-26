@@ -17,8 +17,24 @@ class ArticlePolicy
      * @param  \App\Models\Article  $article
      * @return \Illuminate\Auth\Access\Response|bool
      */
+
+    public function view(User $user, Article $article)
+    {
+        return $user->isAdmin() || $user->id == $article->owner_id || $article->published;
+    }
+
+    public function create()
+    {
+        return auth()->check();
+    }
+
     public function update(User $user, Article $article)
     {
-        return $article->owner_id == $user->id;
+        return ($user->isAdmin()) || ($article->owner_id == $user->id);
+    }
+
+    public function delete(User $user, Article $article)
+    {
+        return ($user->isAdmin()) || ($article->owner_id == $user->id);
     }
 }

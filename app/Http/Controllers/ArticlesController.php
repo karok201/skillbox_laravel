@@ -9,6 +9,7 @@ use App\Notifications\ArticleUpdated;
 use App\Notifications\ArticleDeleted;
 use App\Services\TagsSynchronizer;
 use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\ValidationException;
 
 class ArticlesController extends Controller
@@ -20,13 +21,15 @@ class ArticlesController extends Controller
 
     public function index()
     {
-        $articles = Article::latest()->get();
+        $articles = Article::latest()->get()->filter->published;
 
         return view('index', compact('articles'));
     }
 
     public function show(Article $article)
     {
+        Gate::authorize('view', $article);
+
         return view('articles.show', ['article' => $article]);
     }
 
@@ -47,21 +50,13 @@ class ArticlesController extends Controller
 
     public function update(Article $article, TagsSynchronizer $tagsSynchronizer)
     {
-        $attributes = FormRequest::validate(request());
+        $article->update(FormRequest::validate());
 
-        $article->update($attributes);
+        $tagsSynchronizer->sync($article);
+
         $article->owner->notify(new ArticleUpdated());
 
-        if (empty(request('tags'))) {
-            $article->tags()->delete();
-
-            return redirect('/articles/' . $attributes['slug']);
-        }
-
-        $tags = collect(explode(',', request('tags')))->keyBy(function ($item) { return $item; });
-        $tagsSynchronizer->sync($tags, $article);
-
-        return redirect('/articles/' . $attributes['slug']);
+        return redirect('/articles');
     }
 
     public function destroy(Article $article)
@@ -77,20 +72,11 @@ class ArticlesController extends Controller
      */
     public function store(TagsSynchronizer $tagsSynchronizer)
     {
-        $attributes = FormRequest::validate(request());
-        $attributes['owner_id'] = auth()->id();
+        $article = Article::create(FormRequest::validate());
 
-        $article = Article::create($attributes);
+        $tagsSynchronizer->sync($article);
+
         $article->owner->notify(new ArticleCreated());
-
-        if (empty(request('tags'))) {
-            $article->tags()->delete();
-
-            return redirect('/articles/' . $attributes['slug']);
-        }
-
-        $tags = collect(explode(',', request('tags')))->keyBy(function ($item) { return $item; });
-        $tagsSynchronizer->sync($tags, $article);
 
         return redirect('/articles');
     }
