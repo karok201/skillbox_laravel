@@ -15,7 +15,7 @@ class SendArticlesForPeriod extends Command
      *
      * @var string
      */
-    protected $signature = 'app:send_articles_for_period {period=7}';
+    protected $signature = 'app:send_articles_for_period {period}';
 
     /**
      * The console command description.
