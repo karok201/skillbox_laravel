@@ -25,24 +25,12 @@ class SendArticlesForPeriod extends Command
     protected $description = 'This command sends notifications with articles for enter period';
 
     /**
-     * Create a new command instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
-    /**
      * Execute the console command.
      *
      * @return int
      */
     public function handle()
     {
-
-
         $articles = Article::query()
             ->whereDate('created_at', '>', Carbon::now()->subDays($this->argument('period')))
             ->where('published', Article::PUPLISHED_YES)
