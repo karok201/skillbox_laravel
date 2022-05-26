@@ -12,6 +12,9 @@ class Article extends Model
 {
     use HasFactory;
 
+    const PUPLISHED_YES = 1;
+    const PUPLISHED_NO = 1;
+
     public $guarded = [];
 
     protected $dispatchesEvents = [
@@ -28,8 +31,8 @@ class Article extends Model
         return $this->belongsToMany(Tag::class);
     }
 
-    public function owner(): BelongsTo
+    public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'owner_id');
     }
 }
