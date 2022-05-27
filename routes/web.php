@@ -27,4 +27,7 @@ Route::group(['middleware' => 'auth'], function () {
     });
 });
 
+Route::get('/service', 'App\Http\Controllers\PushServiceController@form');
+Route::post('/service', 'App\Http\Controllers\PushServiceController@send');
+
 Auth::routes();
