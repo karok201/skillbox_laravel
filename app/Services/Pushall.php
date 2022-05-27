@@ -6,13 +6,12 @@ class Pushall
 {
     private $id;
     private $apiKey;
+    protected $url = "https://pushall.ru/api.php";
 
-    protected $url = 'https://pushall.ru/api.php';
-
-    public function __construct($id, $apiKey)
+    public function __construct($apiKey, $id)
     {
-        $this->id = $id;
         $this->apiKey = $apiKey;
+        $this->id = $id;
     }
 
     public function send($title, $text)
@@ -30,10 +29,9 @@ class Pushall
             CURLOPT_POSTFIELDS => $data,
             CURLOPT_RETURNTRANSFER => true
         ]);
-
-        $return = curl_exec($ch); //получить ответ или ошибку
+        $result = curl_exec($ch);
         curl_close($ch);
 
-        return $return;
+        return $result;
     }
 }

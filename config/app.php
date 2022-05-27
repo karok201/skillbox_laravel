@@ -174,8 +174,6 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         App\Providers\TelescopeServiceProvider::class,
-        App\Providers\PushAllServiceProvider::class,
-
     ],
 
     /*
@@ -232,5 +230,10 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
 
     ],
-
+    'pushall' => [
+        'api' => [
+            'key' => env('PUSHALL_PRIVATE_KEY'),
+            'id' => env('PUSHALL_PRIVATE_ID'),
+        ]
+    ]
 ];
