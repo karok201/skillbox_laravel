@@ -7,6 +7,7 @@ use App\Models\Article;
 use App\Notifications\ArticleCreated;
 use App\Notifications\ArticleUpdated;
 use App\Notifications\ArticleDeleted;
+use App\Services\Pushall;
 use App\Services\TagsSynchronizer;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Support\Facades\Gate;
@@ -70,13 +71,15 @@ class ArticlesController extends Controller
     /**
      * @throws ValidationException
      */
-    public function store(TagsSynchronizer $tagsSynchronizer)
+    public function store(TagsSynchronizer $tagsSynchronizer, Pushall $pushall)
     {
         $article = Article::create(FormRequest::validate());
 
         $tagsSynchronizer->sync($article);
 
-        $article->owner->notify(new ArticleCreated());
+        $article->user->notify(new ArticleCreated());
+
+        $pushall->send('Статья создана', $article->largeBody);
 
         return redirect('/articles');
     }
