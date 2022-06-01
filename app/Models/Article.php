@@ -57,4 +57,9 @@ class Article extends Model
             ->withPivot(['before', 'after'])
             ->withTimestamps();
     }
+
+    public function comments(): HasMany
+    {
+        return $this->hasMany(Comment::class);
+    }
 }

@@ -24,5 +24,19 @@
             <p>Изменений не было</p>
         @endforelse
         <a href="/articles">Вернуться к списку</a>
+
+        @auth()
+            @include('layout.errors')
+
+            @include('comments.form')
+        @endauth
+
+        @foreach($article->comments as $comment)
+            <div class="row">
+                <h4 class="">{{$comment->user->email}}</h4>
+                <p>{{$comment->created_at->diffForHumans()}}</p>
+                <p>{{$comment->description}}</p>
+            </div><hr>
+        @endforeach
     </div>
 @endsection
