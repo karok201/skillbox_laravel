@@ -6,7 +6,7 @@ Route::get('/about', function () {
     return view('staticPages.about');
 });
 
-Route::resource('articles', 'App\Http\Controllers\ArticlesController');
+Route::resource('articles', 'App\Http\Controllers\ArticlesController', ['https']);
 
 Route::get('/articles/tags/{tag}', 'App\Http\Controllers\TagsController@index');
 
@@ -29,5 +29,7 @@ Route::group(['middleware' => 'auth'], function () {
 
 Route::get('/service', 'App\Http\Controllers\PushServiceController@form');
 Route::post('/service', 'App\Http\Controllers\PushServiceController@send');
+
+Route::post('/comments', 'App\Http\Controllers\CommentController@store')->middleware(['auth:sanctum']);
 
 Auth::routes();

@@ -55,7 +55,7 @@ class ArticlesController extends Controller
 
         $tagsSynchronizer->sync($article);
 
-        $article->owner->notify(new ArticleUpdated());
+        $article->user->notify(new ArticleUpdated());
 
         return redirect('/articles');
     }
@@ -63,7 +63,8 @@ class ArticlesController extends Controller
     public function destroy(Article $article)
     {
         $article->delete();
-        $article->owner->notify(new ArticleDeleted());
+
+        $article->user->notify(new ArticleDeleted());
 
         return redirect('/articles');
     }
@@ -79,7 +80,7 @@ class ArticlesController extends Controller
 
         $article->user->notify(new ArticleCreated());
 
-        $pushall->send('Статья создана', $article->largeBody);
+        $pushall->send('Статья успешно создана', $article->shortBody);
 
         return redirect('/articles');
     }
