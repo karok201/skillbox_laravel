@@ -52,7 +52,8 @@ class NewsController extends Controller
     }
 
     public function create()
-    {return view('news.create');
+    {
+        return view('news.create');
     }
 
     public function store(Pushall $pushall)

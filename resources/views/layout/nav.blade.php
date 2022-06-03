@@ -54,6 +54,7 @@
                 @admin
                     <a class="p-2 link-secondary" href="/admin/feedback">Админ.обращения</a>
                     <a class="p-2 link-secondary" href="/admin/articles">Админ.статьи</a>
+                    <a class="p-2 link-secondary" href="/admin/news">Админ.новости</a>
                 @endadmin
             @endauth
         </nav>

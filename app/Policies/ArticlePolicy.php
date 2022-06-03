@@ -19,7 +19,7 @@ class ArticlePolicy
      * @return bool
      */
 
-    public function view(User $user, Article $article):bool
+    public function view(User $user, Article $article): bool
     {
         return $user->isAdmin() || $user->id == $article->owner_id || $article->published;
     }
@@ -29,12 +29,12 @@ class ArticlePolicy
         return auth()->check();
     }
 
-    public function update(User $user, Article $article):bool
+    public function update(User $user, Article $article): bool
     {
         return ($user->isAdmin()) || ($article->owner_id == $user->id);
     }
 
-    public function delete(User $user, Article $article):bool
+    public function delete(User $user, Article $article): bool
     {
         return ($user->isAdmin()) || ($article->owner_id == $user->id);
     }
