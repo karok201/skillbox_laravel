@@ -28,7 +28,7 @@
         @auth()
             @include('layout.errors')
 
-            @include('comments.form')
+            @include('comments.articles_form')
         @endauth
 
         @foreach($article->comments as $comment)

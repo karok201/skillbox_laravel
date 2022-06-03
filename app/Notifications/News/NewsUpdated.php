@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Notifications;
+namespace App\Notifications\News;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class ArticleDeleted extends Notification
+class NewsUpdated extends Notification
 {
     use Queueable;
 
@@ -41,10 +41,9 @@ class ArticleDeleted extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-            ->subject('Article Deleted')
-            ->line('You deleted an article.')
-            ->action('Go to main page', url('/articles'))
-            ->line('Thank you for using our application!');
+                    ->line('Some update! Cool!.')
+                    ->action('Check how it looks at our site!', url('/news'))
+                    ->line('Thank you for using our application!');
     }
 
     /**

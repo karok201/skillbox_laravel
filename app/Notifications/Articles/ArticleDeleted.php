@@ -1,28 +1,24 @@
 <?php
 
-namespace App\Notifications;
+namespace App\Notifications\Articles;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class ArticlesForPeriod extends Notification
+class ArticleDeleted extends Notification
 {
     use Queueable;
-
-    protected $articles;
-    protected $period;
 
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct($articles, $period)
+    public function __construct()
     {
-        $this->articles = $articles;
-        $this->period = $period;
+        //
     }
 
     /**
@@ -45,7 +41,10 @@ class ArticlesForPeriod extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-                    ->markdown('mail.articles_for_period', ['articles' => $this->articles, 'period' => $this->period]);
+            ->subject('Article Deleted')
+            ->line('You deleted an article.')
+            ->action('Go to main page', url('/articles'))
+            ->line('Thank you for using our application!');
     }
 
     /**
@@ -54,7 +53,7 @@ class ArticlesForPeriod extends Notification
      * @param  mixed  $notifiable
      * @return array
      */
-    public function toArray($notifiable): array
+    public function toArray($notifiable)
     {
         return [
             //
