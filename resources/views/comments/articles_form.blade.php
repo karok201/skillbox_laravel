@@ -1,4 +1,4 @@
-<form method="post" action="/comments">
+<form method="post" action="/articles/comments">
 
     @csrf
 

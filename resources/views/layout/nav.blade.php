@@ -45,13 +45,16 @@
     <div class="nav">
         <nav class="nav d-flex justify-content-between">
             <a class="p-2 link-secondary" href="/articles">Главная</a>
+            <a class="p-2 link-secondary" href="/news">Новости</a>
             <a class="p-2 link-secondary" href="/about">О нас</a>
             @auth
                 <a class="p-2 link-secondary" href="/contacts">Контакты</a>
                 <a class="p-2 link-secondary" href="/articles/create">Создать статью</a>
+                <a class="p-2 link-secondary" href="/news/create">Создать новость</a>
                 @admin
                     <a class="p-2 link-secondary" href="/admin/feedback">Админ.обращения</a>
                     <a class="p-2 link-secondary" href="/admin/articles">Админ.статьи</a>
+                    <a class="p-2 link-secondary" href="/admin/news">Админ.новости</a>
                 @endadmin
             @endauth
         </nav>

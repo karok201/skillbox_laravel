@@ -1,35 +1,52 @@
 <?php
 
+use App\Http\Controllers\ArticlesController;
+use App\Http\Controllers\Admin\ArticlesController as AdminArticlesController;
+use App\Http\Controllers\CommentController;
+use App\Http\Controllers\ContactsController;
+use App\Http\Controllers\NewsCommentController;
+use App\Http\Controllers\NewsController;
+use App\Http\Controllers\Admin\NewsController as AdminNewsController;
+use App\Http\Controllers\PushServiceController;
+use App\Http\Controllers\TagsController;
 use Illuminate\Support\Facades\Route;
 
+// Static pages...
 Route::get('/about', function () {
     return view('staticPages.about');
 });
 
-Route::resource('articles', 'App\Http\Controllers\ArticlesController', ['https']);
+// Resources Articles and News...
+Route::resource('articles', ArticlesController::class);
+Route::resource('news', NewsController::class);
 
-Route::get('/articles/tags/{tag}', 'App\Http\Controllers\TagsController@index');
+// Page with articles attached to tags...
+Route::get('/articles/tags/{tag}', [TagsController::class, 'index']);
 
-// Contacts interface
-Route::get('/contacts', 'App\Http\Controllers\ContactsController@create');
-Route::get('/admin/feedback', 'App\Http\Controllers\ContactsController@index');
-Route::post('/contacts', 'App\Http\Controllers\ContactsController@store');
+// Contacts...
+Route::get('/contacts', [ContactsController::class, 'create']);
+Route::get('/admin/feedback', [ContactsController::class, 'index']);
+Route::post('/contacts', [ContactsController::class, 'store']);
 
-Route::group(['middleware' => 'auth'], function () {
+// Admin group...
+Route::group(['middleware' => 'auth'], static function () {
     Route::group([
         'prefix' => 'admin',
         'middleware' => 'is_admin',
         'as' => 'admin.',
-    ], function () {
-        Route::get('articles',
-            'App\Http\Controllers\Admin\ArticlesController@index')
-            ->name('articles.index');
+    ], static function () {
+        Route::get('articles', [AdminArticlesController::class, 'index'])->name('articles.index');
+        Route::get('news', [AdminNewsController::class, 'index'])->name('news.index');
     });
 });
 
-Route::get('/service', 'App\Http\Controllers\PushServiceController@form');
-Route::post('/service', 'App\Http\Controllers\PushServiceController@send');
+// Send Push...
+Route::get('/service', [PushServiceController::class, 'form']);
+Route::post('/service', [PushServiceController::class, 'send']);
 
-Route::post('/comments', 'App\Http\Controllers\CommentController@store')->middleware(['auth:sanctum']);
+// Leave comment...
+Route::post('/articles/comments', [CommentController::class, 'store'])->middleware(['auth:sanctum']);
+Route::post('/news/comments', [NewsCommentController::class, 'store'])->middleware(['auth:sanctum']);
 
+// Authorization...
 Auth::routes();

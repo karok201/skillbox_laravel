@@ -4,9 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Helpers\FormRequest;
 use App\Models\Article;
-use App\Notifications\ArticleCreated;
-use App\Notifications\ArticleUpdated;
-use App\Notifications\ArticleDeleted;
+use App\Notifications\Articles\ArticleCreated;
+use App\Notifications\Articles\ArticleDeleted;
+use App\Notifications\Articles\ArticleUpdated;
 use App\Services\Pushall;
 use App\Services\TagsSynchronizer;
 use Illuminate\Auth\Access\AuthorizationException;
@@ -22,14 +22,18 @@ class ArticlesController extends Controller
 
     public function index()
     {
-        $articles = Article::latest()->get()->filter->published;
+        $articles = Article::query()
+            ->where('published', Article::PUPLISHED_YES)
+            ->latest()
+            ->simplePaginate(10)
+        ;
 
         return view('index', compact('articles'));
     }
 
     public function show(Article $article)
     {
-        Gate::authorize('view', $article);
+        Gate::allows('view', $article);
 
         return view('articles.show', ['article' => $article]);
     }
@@ -51,7 +55,7 @@ class ArticlesController extends Controller
 
     public function update(Article $article, TagsSynchronizer $tagsSynchronizer)
     {
-        $article->update(FormRequest::validate());
+        $article->update(FormRequest::articleVaildate());
 
         $tagsSynchronizer->sync($article);
 
@@ -74,7 +78,7 @@ class ArticlesController extends Controller
      */
     public function store(TagsSynchronizer $tagsSynchronizer, Pushall $pushall)
     {
-        $article = Article::create(FormRequest::validate());
+        $article = Article::create(FormRequest::articleValidate());
 
         $tagsSynchronizer->sync($article);
 

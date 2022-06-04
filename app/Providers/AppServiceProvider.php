@@ -6,6 +6,7 @@ use App\Models\Tag;
 use App\Services\Pushall;
 use App\Services\TagsSynchronizer;
 use Blade;
+use Illuminate\Pagination\Paginator;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -40,5 +41,8 @@ class AppServiceProvider extends ServiceProvider
         Blade::if('admin', function ():bool {
             return auth()->user()->isAdmin();
         });
+
+        Paginator::defaultView('pagination::simple-default');
+        Paginator::defaultSimpleView('pagination::simple-default');
     }
 }
